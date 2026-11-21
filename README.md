@@ -1,13 +1,118 @@
-# AnnoMASS documentation
+<p align="center">
+  <img src="docs_site/assets/logo.svg" alt="AnnoMASS logo" width="360">
+</p>
 
-Source of the AnnoMASS user documentation: installation, desktop GUI, command line,
-web version (https://annomass.com) and algorithm.
+<h3 align="center">Tiered MS/MS annotation of flavonoids</h3>
 
-Preview locally:
+<p align="center">
+  <a href="https://annomass.com"><img src="https://img.shields.io/badge/Web%20app-annomass.com-1E88E5.svg" height="22"></a>
+  <a href="https://annomass.readthedocs.io/"><img src="https://img.shields.io/badge/Docs-readthedocs-8CA1AF.svg?logo=readthedocs&logoColor=white" height="22"></a>
+  <a href="https://github.com/12334bvrbdg/AnnoMASS/releases"><img src="https://img.shields.io/badge/Data-Releases-FF4F8B.svg" height="22"></a>
+  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20(WSL2)-555.svg" height="22">
+  <img src="https://img.shields.io/badge/Ion%20mode-positive-555.svg" height="22">
+</p>
+
+**AnnoMASS** annotates flavonoid structures from positive-mode LC-MS/MS spectra. Each spectrum
+is checked against evidence of decreasing reliability, and stops at the first level that
+passes. Every result carries a confidence level mapped to the MSI levels.
+
+| Level | Evidence | MSI level |
+|:---:|---|:---:|
+| **A** | Match to an experimental reference spectrum (spectral-embedding library match) | 2 |
+| **B** | Structure-library inference + experimental spectrum of the candidate | 2 |
+| **C** | Structure-library inference + predicted spectrum | 3 |
+| **D** | Generated structure + predicted spectrum | 4 |
+
+## Use AnnoMASS
+
+| | |
+|---|---|
+| :globe_with_meridians: **Web version** | <https://annomass.com>: no installation, up to 100 spectra per file |
+| :book: **Documentation** | <https://annomass.readthedocs.io>: installation, GUI and CLI tutorials, algorithm |
+| :computer: **Local installation** | [Installation guide](https://annomass.readthedocs.io/en/latest/installation/) |
+
+Command line example:
 
 ```bash
-pip install -r requirements-docs.txt
-mkdocs serve        # open http://127.0.0.1:8000
+annomass headless --mgf input.mgf --out results.xlsx --top-n 3
 ```
 
-The pages are in `docs_site/`. The site is built by Read the Docs from `.readthedocs.yaml`.
+## Downloads
+
+Besides the code, AnnoMASS needs the files below. The
+[installation guide](https://annomass.readthedocs.io/en/latest/installation/#step-3-model-and-data-files)
+says where each file goes.
+
+### 1. AnnoMASS data
+
+From the [Releases](https://github.com/12334bvrbdg/AnnoMASS/releases) page of this repository:
+
+| File | Content |
+|---|---|
+| `MassSpecGym_DreaMS_flavonoid_only.hdf5` | Flavonoid reference library with spectral embeddings (level A) |
+| `references_spectrums_positive.pickle`, `references_spectrums_negative.pickle` | Experimental reference spectra (level B) |
+| `references_index_positive_spec2vec.bin`, `references_index_negative_spec2vec.bin` | Search index of the reference spectra |
+| `spec2vec_spectraverse_positive.model`, `spec2vec_spectraverse_negative.model` (+ `.npy` files) | Spectral-similarity models |
+| `FlavonoidStructureDB-dedup.csv` | Flavonoid structure database |
+| `flavonoid_candidates_final.csv` | Generated flavonoid structures (level D) |
+| `CFIL_extended.csv`, `TPIL_extended.xlsx` | Diagnostic fragment libraries |
+
+### 2. Pretrained weights from the original authors
+
+These weights are used as published. Please download them from the original authors:
+
+| Weights | Download |
+|---|---|
+| DreaMS: `ssl_model.ckpt`, `embedding_model.ckpt` | Zenodo [10997887](https://zenodo.org/records/10997887) |
+| ICEBERG, MassSpecGym-trained (folder `msg_all`) | [Dropbox link given in the ms-pred README](https://www.dropbox.com/scl/fo/kwm35ih8tlfnshfrcq8ot/AOeS4M0_v9MhqeEZys9sCRQ?rlkey=f1n6pbzx94g1k2el2wcbmee61&st=dcl9pbyp&dl=0) |
+| ABCoRT retention-time model | included in the [ABCoRT](https://github.com/RiverCCC/ABCoRT) repository |
+
+### 3. Public spectral databases
+
+The AnnoMASS libraries were built from these public resources. You do not need to download
+them to run AnnoMASS.
+
+| Database | Link |
+|---|---|
+| MassSpecGym | [Hugging Face dataset](https://huggingface.co/datasets/roman-bushuiev/MassSpecGym) |
+| Spectraverse v1.0.1 | [Zenodo 10.5281/zenodo.17870921](https://doi.org/10.5281/zenodo.17870921) |
+| DeepMASS2 reference data | [DeepMASS2 release v0.99.1](https://github.com/hcji/DeepMASS2_GUI/releases/tag/v0.99.1) |
+| GNPS | <https://gnps.ucsd.edu> |
+| MoNA | <https://mona.fiehnlab.ucdavis.edu> |
+
+## Methods AnnoMASS builds on
+
+| Method | Role in AnnoMASS | Code |
+|---|---|---|
+| DreaMS | Spectral embedding, library matching (level A) | [pluskal-lab/DreaMS](https://github.com/pluskal-lab/DreaMS) |
+| DeepMASS2 | Structure-library inference (levels B and C) | [hcji/DeepMASS2_GUI](https://github.com/hcji/DeepMASS2_GUI) |
+| Spec2Vec, matchms | Spectral similarity and spectrum processing | [iomega/spec2vec](https://github.com/iomega/spec2vec), [matchms/matchms](https://github.com/matchms/matchms) |
+| ICEBERG | Fragmentation and spectrum prediction (levels C and D) | [coleygroup/ms-pred](https://github.com/coleygroup/ms-pred) |
+| CLM, REINVENT4 | Chemical language model for generated structures (level D) | [skinniderlab/CLM](https://github.com/skinniderlab/CLM), [MolecularAI/REINVENT4](https://github.com/MolecularAI/REINVENT4) |
+| AnnoSM | Substituent-position check | [YangHuaLab/AnnoSM](https://github.com/YangHuaLab/AnnoSM) |
+| ABCoRT | Retention-time prediction (optional) | [RiverCCC/ABCoRT](https://github.com/RiverCCC/ABCoRT) |
+| RDKit | Chemistry toolkit | [rdkit.org](https://www.rdkit.org) |
+
+## References
+
+1. Bushuiev, R. et al. Self-supervised learning of molecular representations from millions of tandem mass spectra using DreaMS. *Nature Biotechnology* **44**, 630–640 (2026). https://doi.org/10.1038/s41587-025-02663-3
+2. Bushuiev, R. et al. MassSpecGym: a benchmark for the discovery and identification of molecules. *Advances in Neural Information Processing Systems* **37**, 110010–110027 (2024). https://doi.org/10.48550/arXiv.2410.23326
+3. Huber, F. et al. Spec2Vec: improved mass spectral similarity scoring through learning of structural relationships. *PLoS Computational Biology* **17**, e1008724 (2021). https://doi.org/10.1371/journal.pcbi.1008724
+4. Huber, F. et al. matchms – processing and similarity evaluation of mass spectrometry data. *Journal of Open Source Software* **5**, 2411 (2020). https://doi.org/10.21105/joss.02411
+5. Goldman, S., Li, J. & Coley, C. W. Generating molecular fragmentation graphs with autoregressive neural networks. *Analytical Chemistry* **96**, 3419–3428 (2024). https://doi.org/10.1021/acs.analchem.3c04654
+6. Wang, R. et al. Neural spectral prediction for structure elucidation with tandem mass spectrometry. *bioRxiv* 2025.05.28.656653 (2025). https://doi.org/10.1101/2025.05.28.656653
+7. Loeffler, H. H. et al. Reinvent 4: modern AI-driven generative molecule design. *Journal of Cheminformatics* **16**, 20 (2024). https://doi.org/10.1186/s13321-024-00812-5
+8. Schymanski, E. L. et al. Identifying small molecules via high resolution mass spectrometry: communicating confidence. *Environmental Science & Technology* **48**, 2097–2098 (2014). https://doi.org/10.1021/es5002105
+
+## Citation
+
+The AnnoMASS paper is in preparation. Citation details will be added here.
+
+## Repository contents
+
+| Path | Content |
+|---|---|
+| `docs_site/` | Documentation pages (built at <https://annomass.readthedocs.io>) |
+| `mkdocs.yml`, `.readthedocs.yaml` | Documentation build settings |
+
+Preview the documentation locally: `pip install -r requirements-docs.txt && mkdocs serve`.

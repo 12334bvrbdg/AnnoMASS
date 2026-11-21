@@ -57,6 +57,8 @@ Confidence levels A–D follow the MSI levels of reference 8.
 
 ## Reference data
 
-The spectral libraries of AnnoMASS were compiled from public data: MassSpecGym, SpectraVerse,
-and the public reference spectra collected by DeepMASS2. We thank everyone who shares MS/MS
+The spectral libraries of AnnoMASS were compiled from public data:
+[MassSpecGym](https://huggingface.co/datasets/roman-bushuiev/MassSpecGym),
+[Spectraverse v1.0.1](https://doi.org/10.5281/zenodo.17870921), and the public reference spectra
+collected by [DeepMASS2](https://github.com/hcji/DeepMASS2_GUI/releases/tag/v0.99.1). We thank everyone who shares MS/MS
 spectra in public libraries.

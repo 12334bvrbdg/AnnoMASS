@@ -131,7 +131,7 @@ These weights belong to other projects. Download them from their official pages.
 | Weights | Source | Put it in |
 |---|---|---|
 | `ssl_model.ckpt`, `embedding_model.ckpt` | DreaMS, Zenodo record [10997887](https://zenodo.org/records/10997887) | `~/AnnoMASS/external/DreaMS/dreams/models/pretrained/` |
-| folder `msg_all` (`gen/best.ckpt`, `inten_contr/best.ckpt`) | ms-pred [README](https://github.com/coleygroup/ms-pred), section "pretrained models" | `~/AnnoMASS/external/ms-pred/models/msg_all/` |
+| folder `msg_all` (`gen/best.ckpt`, `inten_contr/best.ckpt`) | ICEBERG MassSpecGym-trained weights, [Dropbox link](https://www.dropbox.com/scl/fo/kwm35ih8tlfnshfrcq8ot/AOeS4M0_v9MhqeEZys9sCRQ?rlkey=f1n6pbzx94g1k2el2wcbmee61&st=dcl9pbyp&dl=0) given in the [ms-pred README](https://github.com/coleygroup/ms-pred) | `~/AnnoMASS/external/ms-pred/models/msg_all/` |
 
 After copying, run the installer again. It reports the files that are still missing:
 
