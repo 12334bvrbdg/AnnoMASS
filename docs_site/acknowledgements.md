@@ -29,12 +29,31 @@ AnnoMASS installs each component at a fixed version. Small local changes needed 
 integration are kept as patch files in `release_files/installer/patches/`. Each component keeps
 its own license; see the license file in its folder under `~/AnnoMASS/external/`.
 
-## Confidence levels
+## References
 
-The confidence levels follow:
+1. Bushuiev, R. et al. Self-supervised learning of molecular representations from millions of
+   tandem mass spectra using DreaMS. *Nature Biotechnology* **44**, 630–640 (2026).
+   <https://doi.org/10.1038/s41587-025-02663-3>
+2. Bushuiev, R. et al. MassSpecGym: a benchmark for the discovery and identification of
+   molecules. *Advances in Neural Information Processing Systems* **37**, 110010–110027 (2024).
+   <https://doi.org/10.48550/arXiv.2410.23326>
+3. Huber, F. et al. Spec2Vec: improved mass spectral similarity scoring through learning of
+   structural relationships. *PLoS Computational Biology* **17**, e1008724 (2021).
+   <https://doi.org/10.1371/journal.pcbi.1008724>
+4. Huber, F. et al. matchms – processing and similarity evaluation of mass spectrometry data.
+   *Journal of Open Source Software* **5**, 2411 (2020). <https://doi.org/10.21105/joss.02411>
+5. Goldman, S., Li, J. & Coley, C. W. Generating molecular fragmentation graphs with
+   autoregressive neural networks. *Analytical Chemistry* **96**, 3419–3428 (2024).
+   <https://doi.org/10.1021/acs.analchem.3c04654>
+6. Wang, R. et al. Neural spectral prediction for structure elucidation with tandem mass
+   spectrometry. *bioRxiv* 2025.05.28.656653 (2025). <https://doi.org/10.1101/2025.05.28.656653>
+7. Loeffler, H. H. et al. Reinvent 4: modern AI-driven generative molecule design.
+   *Journal of Cheminformatics* **16**, 20 (2024). <https://doi.org/10.1186/s13321-024-00812-5>
+8. Schymanski, E. L. et al. Identifying small molecules via high resolution mass spectrometry:
+   communicating confidence. *Environmental Science & Technology* **48**, 2097–2098 (2014).
+   <https://doi.org/10.1021/es5002105>
 
-> Schymanski, E. L. et al. Identifying small molecules via high resolution mass spectrometry:
-> communicating confidence. *Environmental Science & Technology* **48**, 2097–2098 (2014).
+Confidence levels A–D follow the MSI levels of reference 8.
 
 ## Reference data
 
