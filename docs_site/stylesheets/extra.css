@@ -1,0 +1,9 @@
+/* Level colours used in the tables and badges of the documentation. */
+.level { display: inline-block; min-width: 1.6em; padding: 0 .4em; border-radius: .3em;
+         color: #fff; font-weight: 700; text-align: center; }
+.level-a { background: #2e7d32; }
+.level-b { background: #1565c0; }
+.level-c { background: #ef6c00; }
+.level-d { background: #8e24aa; }
+
+.md-typeset table:not([class]) th { white-space: nowrap; }
