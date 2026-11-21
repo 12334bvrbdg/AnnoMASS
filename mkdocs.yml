@@ -4,7 +4,7 @@ site_description: >-
   use the desktop GUI or the command line, or try the web version.
 site_author: AnnoMASS developers
 # site_url is needed for the sitemap that search engines read.
-site_url: https://annomass.readthedocs.io/
+site_url: https://docs.annomass.com/
 repo_url: https://github.com/12334bvrbdg/AnnoMASS
 repo_name: 12334bvrbdg/AnnoMASS
 edit_uri: edit/main/docs_site/
