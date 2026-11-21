@@ -71,6 +71,7 @@ a model. The key stays in your browser session and is not stored on the server.
 
 ## Privacy
 
-Uploaded files and results are saved in temporary folders on the server and are not shared
-with other users. Do not upload confidential data. For confidential data, use the
+Uploaded files and results are kept on the server for **3 days** and then deleted
+automatically. They are not shared with other users. Download your results within 3 days.
+Do not upload confidential data. For confidential data, use the
 [local installation](installation.md).
