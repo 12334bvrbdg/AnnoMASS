@@ -5,16 +5,29 @@
 <h3 align="center">Tiered MS/MS annotation of flavonoids</h3>
 
 <p align="center">
-  <a href="https://annomass.com"><img src="https://img.shields.io/badge/Web%20app-annomass.com-1E88E5.svg" height="22"></a>
-  <a href="https://annomass.readthedocs.io/"><img src="https://img.shields.io/badge/Docs-readthedocs-8CA1AF.svg?logo=readthedocs&logoColor=white" height="22"></a>
-  <a href="https://github.com/12334bvrbdg/AnnoMASS/releases"><img src="https://img.shields.io/badge/Data-Releases-FF4F8B.svg" height="22"></a>
-  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20(WSL2)-555.svg" height="22">
-  <img src="https://img.shields.io/badge/Ion%20mode-positive-555.svg" height="22">
+  <a href="https://annomass.com"><img src="https://img.shields.io/badge/Web%20app-annomass.com-1E88E5?style=flat-square" alt="Web app"></a>
+  <a href="https://annomass.readthedocs.io/"><img src="https://img.shields.io/badge/Docs-readthedocs-8CA1AF?style=flat-square&logo=readthedocs&logoColor=white" alt="Docs"></a>
+  <a href="https://github.com/12334bvrbdg/AnnoMASS/releases/latest"><img src="https://img.shields.io/github/v/release/12334bvrbdg/AnnoMASS?style=flat-square&label=Data%20release&color=FF4F8B" alt="Release"></a>
+  <img src="https://img.shields.io/badge/Python-3.10-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10">
+  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20WSL2-555?style=flat-square&logo=linux&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/Ion%20mode-positive-555?style=flat-square" alt="Positive ion mode">
 </p>
 
-**AnnoMASS** annotates flavonoid structures from positive-mode LC-MS/MS spectra. Each spectrum
-is checked against evidence of decreasing reliability, and stops at the first level that
-passes. Every result carries a confidence level mapped to the MSI levels.
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#use-annomass">Use</a> ·
+  <a href="#downloads">Downloads</a> ·
+  <a href="#3-screen-flavonoids-from-other-structure-databases">Flavonoid screening</a> ·
+  <a href="https://annomass.readthedocs.io">Documentation</a> ·
+  <a href="#references">References</a>
+</p>
+
+---
+
+**AnnoMASS** annotates flavonoid structures from positive-mode LC-MS/MS spectra. Levels A–C
+are applied in order, and a spectrum stops at the first level that gives a candidate above its
+score threshold. Level D proposes generated structures for any spectrum as an extra output.
+Every result carries a confidence level mapped to the MSI levels.
 
 | Level | Evidence | MSI level |
 |:---:|---|:---:|
@@ -22,6 +35,13 @@ passes. Every result carries a confidence level mapped to the MSI levels.
 | **B** | Structure-library inference + experimental spectrum of the candidate | 2 |
 | **C** | Structure-library inference + predicted spectrum | 3 |
 | **D** | Generated structure + predicted spectrum | 4 |
+
+**What you get**
+
+- :microscope: **Flavonoid-focused libraries**: a reference spectral library, an experimental spectral library and a structure library of 18,254 flavonoids, ready to download
+- :desktop_computer: **Three ways to run**: desktop GUI, command line, and the web app at [annomass.com](https://annomass.com)
+- :package: **One-line install**: the installer sets up all environments and downloads all weights and libraries
+- :test_tube: **Your own structure library**: screen flavonoids from DeepMASS2, PubChem, COCONUT or any SMILES list with the same rules
 
 ## Use AnnoMASS
 
