@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=AnnoMASS
+Comment=Flavonoid MS/MS annotation
+Exec=annomass
+Terminal=false
+Categories=Science;Chemistry;

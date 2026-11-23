@@ -31,7 +31,7 @@ Installation has three steps:
 
 1. Get the AnnoMASS code.
 2. Run the installer. It builds the Python environments and downloads the third-party code.
-3. Put the model and data files in place.
+3. The installer downloads the model and data files.
 
 The installer creates everything under `~/AnnoMASS` (you can change this with
 `ANNOMASS_HOME`). It does not change your system Python or other conda environments.
@@ -102,51 +102,49 @@ You can also download the ZIP file from the GitHub page and unpack it.
 The first run takes 20–60 minutes, depending on your network. It is safe to run the installer
 again: finished parts are skipped.
 
-At the end, the installer checks the model and data files and lists the missing ones.
-This is expected on the first run. Continue with step 3.
+At the end, the installer downloads the model and data files (step 3) and checks that
+all of them are in place.
 
 ## Step 3: Model and data files
 
-The model weights and reference data are too large for the git repository. They come from
-two places.
-
-### A. Files from this project (GitHub Release)
-
-Download these files from the **Releases** page of the AnnoMASS repository.
-`<app>` is the AnnoMASS folder from step 1.
-
-| File | Put it in |
-|---|---|
-| `references_index_positive_spec2vec.bin`, `references_index_negative_spec2vec.bin`, `references_spectrums_positive.pickle`, `references_spectrums_negative.pickle` | `<app>/data/` |
-| `MassSpecGym_DreaMS_flavonoid_only.hdf5` | `<app>/data/reference_libraries/` |
-| `spec2vec_spectraverse_positive.model`, `spec2vec_spectraverse_negative.model` and their `.npy` files | `<app>/model/` |
-| `FlavonoidStructureDB-dedup.csv` | `<app>/Stru/` |
-| `flavonoid_candidates_final.csv` | `~/AnnoMASS/external/deepmet/final_results/` |
-| `CFIL_extended.csv`, `TPIL_extended.xlsx` | `~/AnnoMASS/external/AnnoSM/Library/` |
-
-### B. Pretrained weights from the original authors
-
-These weights belong to other projects. Download them from their official pages.
-
-| Weights | Source | Put it in |
-|---|---|---|
-| `ssl_model.ckpt`, `embedding_model.ckpt` | DreaMS, Zenodo record [10997887](https://zenodo.org/records/10997887) | `~/AnnoMASS/external/DreaMS/dreams/models/pretrained/` |
-| folder `msg_all` (`gen/best.ckpt`, `inten_contr/best.ckpt`) | ICEBERG MassSpecGym-trained weights, [Dropbox link](https://www.dropbox.com/scl/fo/kwm35ih8tlfnshfrcq8ot/AOeS4M0_v9MhqeEZys9sCRQ?rlkey=f1n6pbzx94g1k2el2wcbmee61&st=dcl9pbyp&dl=0) given in the [ms-pred README](https://github.com/coleygroup/ms-pred) | `~/AnnoMASS/external/ms-pred/models/msg_all/` |
-
-After copying, run the installer again. It reports the files that are still missing:
+The installer downloads the model weights, spectral libraries and structure libraries
+(about 3.7 GB) from the [GitHub Release](https://github.com/12334bvrbdg/AnnoMASS/releases)
+and puts each file in place. If the download stops, run it again; finished files are skipped:
 
 ```bash
-bash release_files/installer/install.sh
+bash release_files/installer/download_data.sh
 ```
 
-When everything is in place you will see `All model/data files present.`
+When everything is in place, the installer prints `All model/data files present.`
+
+??? note "Manual download"
+    You can also download the files from the Release page yourself and copy them here.
+    `<app>` is the AnnoMASS folder from step 1.
+
+    | File | Put it in |
+    |---|---|
+    | `references_index_positive_spec2vec.bin`, `references_index_negative_spec2vec.bin`, `references_spectrums_positive.pickle`, `references_spectrums_negative.pickle` | `<app>/data/` |
+    | `MassSpecGym_DreaMS_flavonoid_only.hdf5` | `<app>/data/reference_libraries/` |
+    | `spec2vec_spectraverse_positive.model`, `spec2vec_spectraverse_negative.model` and their `.npy` files | `<app>/model/` |
+    | `FlavonoidStructureDB-dedup.csv` | `<app>/Stru/` |
+    | `flavonoid_candidates_final.csv` | `~/AnnoMASS/external/deepmet/final_results/` |
+    | `CFIL_extended.csv`, `TPIL_extended.xlsx` | `~/AnnoMASS/external/AnnoSM/Library/` |
+    | `ssl_model.ckpt`, `embedding_model.ckpt` | `~/AnnoMASS/external/DreaMS/dreams/models/pretrained/` |
+    | `msg_all.zip` (unzip it here) | `~/AnnoMASS/external/ms-pred/models/` |
+
+    Check the downloads with `sha256sum -c SHA256SUMS.txt`.
+
+The DreaMS and ICEBERG weights are copies of the files published by their authors
+(DreaMS: Zenodo [10997887](https://zenodo.org/records/10997887); ICEBERG: the MassSpecGym-trained
+`msg_all` model linked in the [ms-pred README](https://github.com/coleygroup/ms-pred)).
+Please cite the original papers when you use them.
 
 ## Check the installation
 
 Run the 5-spectrum example from the command line:
 
 ```bash
-annomass headless --mgf docs_site/assets/example_5_spectra.mgf --out test_result.xlsx
+annomass headless --mgf examples/example_5_spectra.mgf --out test_result.xlsx
 ```
 
 The run takes a few minutes. It should end with a line like

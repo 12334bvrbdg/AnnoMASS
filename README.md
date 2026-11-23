@@ -29,45 +29,78 @@ passes. Every result carries a confidence level mapped to the MSI levels.
 |---|---|
 | :globe_with_meridians: **Web version** | <https://annomass.com>: no installation, up to 100 spectra per file |
 | :book: **Documentation** | <https://annomass.readthedocs.io>: installation, GUI and CLI tutorials, algorithm |
-| :computer: **Local installation** | [Installation guide](https://annomass.readthedocs.io/en/latest/installation/) |
+| :computer: **Local installation** | see [Install](#install) below |
 
-Command line example:
+### Desktop GUI
+
+<p align="center"><img src="docs_site/assets/screenshots/gui.png" alt="AnnoMASS desktop GUI" width="100%"></p>
+
+### Web version
+
+<p align="center"><img src="docs_site/assets/screenshots/web.png" alt="AnnoMASS web version" width="80%"></p>
+
+## Install
+
+Linux (Ubuntu 22.04 or later) or Windows 10/11 with WSL2:
 
 ```bash
-annomass headless --mgf input.mgf --out results.xlsx --top-n 3
+git clone https://github.com/12334bvrbdg/AnnoMASS.git
+cd AnnoMASS
+bash release_files/installer/install.sh
+```
+
+The installer builds three Python environments under `~/AnnoMASS`, fetches the third-party
+code at the commits used for the paper, and downloads all model weights, spectral libraries and
+structure libraries (about 3.7 GB) from the [Releases](https://github.com/12334bvrbdg/AnnoMASS/releases)
+page. The first run takes 20–60 minutes. Details: [installation guide](https://annomass.readthedocs.io/en/latest/installation/).
+
+Test it on the five example spectra, then start the GUI:
+
+```bash
+annomass headless --mgf examples/example_5_spectra.mgf --out test_result.xlsx --top-n 3
+annomass
 ```
 
 ## Downloads
 
-Besides the code, AnnoMASS needs the files below. The
-[installation guide](https://annomass.readthedocs.io/en/latest/installation/#step-3-model-and-data-files)
-says where each file goes.
+### 1. Model weights and libraries (Release v1.0.0)
 
-### 1. AnnoMASS data
-
-From the [Releases](https://github.com/12334bvrbdg/AnnoMASS/releases) page of this repository:
+All files are on the [Releases](https://github.com/12334bvrbdg/AnnoMASS/releases/tag/v1.0.0) page.
+The installer downloads them for you (`release_files/installer/download_data.sh`).
 
 | File | Content |
 |---|---|
-| `MassSpecGym_DreaMS_flavonoid_only.hdf5` | Flavonoid reference library with spectral embeddings (level A) |
-| `references_spectrums_positive.pickle`, `references_spectrums_negative.pickle` | Experimental reference spectra (level B) |
-| `references_index_positive_spec2vec.bin`, `references_index_negative_spec2vec.bin` | Search index of the reference spectra |
-| `spec2vec_spectraverse_positive.model`, `spec2vec_spectraverse_negative.model` (+ `.npy` files) | Spectral-similarity models |
-| `FlavonoidStructureDB-dedup.csv` | Flavonoid structure database |
+| `MassSpecGym_DreaMS_flavonoid_only.hdf5` | Flavonoid reference spectral library with spectral embeddings (level A) |
+| `references_spectrums_positive.pickle`, `references_spectrums_negative.pickle` | Experimental flavonoid spectral library (level B) |
+| `references_index_positive_spec2vec.bin`, `references_index_negative_spec2vec.bin` | Search index of the spectral library |
+| `spec2vec_spectraverse_positive.model`, `spec2vec_spectraverse_negative.model` (+ `.npy` files) | Spectral-similarity model weights |
+| `FlavonoidStructureDB-dedup.csv` | Flavonoid structure library, 18,254 structures |
 | `flavonoid_candidates_final.csv` | Generated flavonoid structures (level D) |
 | `CFIL_extended.csv`, `TPIL_extended.xlsx` | Diagnostic fragment libraries |
+| `ssl_model.ckpt`, `embedding_model.ckpt` | DreaMS pretrained weights (copy of Zenodo [10997887](https://zenodo.org/records/10997887)) |
+| `msg_all.zip` | ICEBERG MassSpecGym-trained weights (copy of the model linked in the [ms-pred README](https://github.com/coleygroup/ms-pred)) |
+| `SHA256SUMS.txt` | Checksums |
 
-### 2. Pretrained weights from the original authors
+The DreaMS and ICEBERG weights are unchanged copies of the files published by their authors.
+Please cite the original papers (references 1 and 5–6) when you use them.
 
-These weights are used as published. Please download them from the original authors:
+### 2. Example spectra
 
-| Weights | Download |
-|---|---|
-| DreaMS: `ssl_model.ckpt`, `embedding_model.ckpt` | Zenodo [10997887](https://zenodo.org/records/10997887) |
-| ICEBERG, MassSpecGym-trained (folder `msg_all`) | [Dropbox link given in the ms-pred README](https://www.dropbox.com/scl/fo/kwm35ih8tlfnshfrcq8ot/AOeS4M0_v9MhqeEZys9sCRQ?rlkey=f1n6pbzx94g1k2el2wcbmee61&st=dcl9pbyp&dl=0) |
-| ABCoRT retention-time model | included in the [ABCoRT](https://github.com/RiverCCC/ABCoRT) repository |
+`examples/example_5_spectra.mgf`: five positive-mode spectra of flavonoid standards (daidzein, genistein,
+luteolin, quercetin, myricetin).
 
-### 3. Public spectral databases
+### 3. Screen flavonoids from other structure databases
+
+`flavonoid_screening/screen_flavonoids.py` applies the rules that built the AnnoMASS structure
+library to any structure table (DeepMASS2 structure database, PubChem, COCONUT, or your own
+list). See [flavonoid_screening/README.md](flavonoid_screening/README.md).
+
+```bash
+curl -LO https://github.com/hcji/DeepMASS2_GUI/releases/download/v0.99.1/DeepMassStructureDB-v1.1.csv
+python flavonoid_screening/screen_flavonoids.py --input DeepMassStructureDB-v1.1.csv --out flavonoids.csv --workers 6
+```
+
+### 4. Public spectral databases
 
 The AnnoMASS libraries were built from these public resources. You do not need to download
 them to run AnnoMASS.
@@ -112,7 +145,11 @@ The AnnoMASS paper is in preparation. Citation details will be added here.
 
 | Path | Content |
 |---|---|
-| `docs_site/` | Documentation pages (built at <https://annomass.readthedocs.io>) |
-| `mkdocs.yml`, `.readthedocs.yaml` | Documentation build settings |
-
-Preview the documentation locally: `pip install -r requirements-docs.txt && mkdocs serve`.
+| `release_files/installer/` | Installer (`install.sh`, `download_data.sh`, Windows `.bat` files), environment files, patches |
+| `annomass_app.py`, `launch_gui.py`, `uic/`, `ui/` | Desktop GUI |
+| `run_pipeline_headless.py` | Command line (`annomass headless`) |
+| `core/`, `scripts/icefrag/` | AnnoMASS pipeline |
+| `third_party/AnnoSM_py/` | Python port of AnnoSM used for the substituent-position check |
+| `flavonoid_screening/` | Flavonoid screening script |
+| `examples/` | Example spectra |
+| `docs_site/`, `mkdocs.yml` | Documentation (built at <https://annomass.readthedocs.io>) |

@@ -1,0 +1,16 @@
+# base  path          (APP = the downloaded AnnoMASS folder, HOME = ANNOMASS_HOME)
+APP  data/references_index_positive_spec2vec.bin
+APP  data/references_index_negative_spec2vec.bin
+APP  data/references_spectrums_positive.pickle
+APP  data/references_spectrums_negative.pickle
+APP  data/reference_libraries/MassSpecGym_DreaMS_flavonoid_only.hdf5
+APP  model/spec2vec_spectraverse_positive.model
+APP  model/spec2vec_spectraverse_negative.model
+APP  Stru/FlavonoidStructureDB-dedup.csv
+HOME external/ms-pred/models/msg_all/gen/best.ckpt
+HOME external/ms-pred/models/msg_all/inten_contr/best.ckpt
+HOME external/DreaMS/dreams/models/pretrained/ssl_model.ckpt
+HOME external/DreaMS/dreams/models/pretrained/embedding_model.ckpt
+HOME external/deepmet/final_results/flavonoid_candidates_final.csv
+HOME external/AnnoSM/Library/CFIL_extended.csv
+HOME external/AnnoSM/Library/TPIL_extended.xlsx

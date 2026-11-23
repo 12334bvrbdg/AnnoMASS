@@ -1,0 +1,46 @@
+diff --git a/dreams/api.py b/dreams/api.py
+index d441d9d..306ee54 100644
+--- a/dreams/api.py
++++ b/dreams/api.py
+@@ -31,6 +31,32 @@ if platform.system() == 'Windows':
+     pathlib.PosixPath = pathlib.WindowsPath
+ 
+ 
++def _patch_lightning_load():
++    """Patch Lightning's internal torch.load call to use weights_only=False.
++
++    PyTorch 2.6 changed the default of weights_only from False to True.
++    DreaMS checkpoints were saved with an older package name ('msml') and
++    contain class references that fail the strict weights_only=True check.
++    The checkpoints come from a trusted source, so weights_only=False is safe.
++
++    pytorch_lightning.core.saving imports _load as pl_load at module load time,
++    so we must patch the name in that module's namespace, not in cloud_io.
++    """
++    import lightning_fabric.utilities.cloud_io as _lf_cloud_io
++    import pytorch_lightning.core.saving as _pl_saving
++
++    def _permissive_load(path_or_url, map_location):
++        fs = _lf_cloud_io.get_filesystem(path_or_url)
++        with fs.open(path_or_url, "rb") as f:
++            return torch.load(f, map_location=map_location, weights_only=False)
++
++    _lf_cloud_io._load = _permissive_load  # for any future imports
++    _pl_saving.pl_load = _permissive_load   # patch the already-imported reference
++
++
++_patch_lightning_load()
++
++
+ class PreTrainedModel:
+     def __init__(self, model: T.Union[DreaMSModel, FineTuningHead], n_highest_peaks: int = 100):
+         self.model = model.eval()
+@@ -76,7 +102,7 @@ class PreTrainedModel:
+ 
+             if remove_unused_backbone_parameters:
+                 model.model = cls.remove_unused_backbone_parameters(model.model)
+-            
++
+             return model
+         else:
+ 

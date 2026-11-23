@@ -1,0 +1,37 @@
+diff --git a/load_data_SMRT.py b/load_data_SMRT.py
+index b261440..09f223c 100644
+--- a/load_data_SMRT.py
++++ b/load_data_SMRT.py
+@@ -9,7 +9,7 @@ from get_feature import get_AtomBond_feature
+ class SMRT_Dataset_Load_train(InMemoryDataset):
+     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
+         super().__init__(root, transform, pre_transform, pre_filter)
+-        self.data, self.slices = torch.load(self.processed_paths[0])
++        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
+     @property
+     def raw_dir(self) -> str:
+         return os.path.join(self.root, 'raw')
+@@ -61,9 +61,7 @@ class SMRT_Dataset_Load_train(InMemoryDataset):
+ class SMRT_Dataset_Load_test(InMemoryDataset):
+     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
+         super().__init__(root, transform, pre_transform, pre_filter)
+-        self.data, self.slices = torch.load(self.processed_paths[0])
+-
+-
++        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
+     @property
+     def raw_dir(self) -> str:
+         return os.path.join(self.root, 'raw')
+diff --git a/load_data_transfer.py b/load_data_transfer.py
+index 8c2b143..616f1c8 100644
+--- a/load_data_transfer.py
++++ b/load_data_transfer.py
+@@ -12,7 +12,7 @@ class Transfer_data_load(InMemoryDataset):
+     def __init__(self, root,name, transform=None, pre_transform=None, pre_filter=None):
+         self.name=name
+         super().__init__(root, transform, pre_transform, pre_filter)
+-        self.data, self.slices = torch.load(self.processed_paths[0])
++        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
+ 
+     @property
+     def raw_dir(self) -> str:

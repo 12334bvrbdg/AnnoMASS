@@ -1,0 +1,138 @@
+diff --git a/configs/iceberg/iceberg_elucidation.yaml b/configs/iceberg/iceberg_elucidation.yaml
+index a5a1cd8..2680a09 100644
+--- a/configs/iceberg/iceberg_elucidation.yaml
++++ b/configs/iceberg/iceberg_elucidation.yaml
+@@ -26,6 +26,25 @@ example: # modify example to your hostname
+   dist_func: 'entropy'
+   instrument: 'Orbitrap'
+ 
++annomass:
++  python_path: '~/AnnoMASS/envs/spectrum-prediction/bin/python'
++  gen_ckpt: '~/AnnoMASS/external/ms-pred/models/msg_all/gen/best.ckpt'
++  inten_ckpt: '~/AnnoMASS/external/ms-pred/models/msg_all/inten_contr/best.ckpt'
++  conf_models: {}
++  conf_thresholds: {}
++  cuda_devices: 0
++  batch_size: 8
++  num_cpu_workers: 6
++  num_gpu_workers: 1
++  sparse_k: 100
++  max_nodes: 100
++  threshold: 0.0
++  binned_out: False
++  ppm: 20
++  num_bins: 15000
++  dist_func: 'entropy'
++  instrument: 'Orbitrap'
++
+ # below are example configurations in Coley group nodes
+ molgpu01:
+   python_path: '/home/runzhong/mambaforge/envs/ms-gen-torch24/bin/python'
+diff --git a/src/ms_pred/iceberg/joint_model.py b/src/ms_pred/iceberg/joint_model.py
+index 15bea60..08ae14d 100644
+--- a/src/ms_pred/iceberg/joint_model.py
++++ b/src/ms_pred/iceberg/joint_model.py
+@@ -58,8 +58,12 @@ class JointModel(pl.LightningModule):
+             inten_checkpoint
+         """
+ 
+-        gen_model_obj = gen_model.FragGNN.load_from_checkpoint(gen_checkpoint, map_location="cpu")
+-        inten_model_obj = inten_model.IntenGNN.load_from_checkpoint(inten_checkpoint, map_location="cpu")
++        gen_model_obj = gen_model.FragGNN.load_from_checkpoint(
++            gen_checkpoint, map_location="cpu", weights_only=False
++        )
++        inten_model_obj = inten_model.IntenGNN.load_from_checkpoint(
++            inten_checkpoint, map_location="cpu", weights_only=False
++        )
+         return cls(gen_model_obj, inten_model_obj)
+ 
+     def predict_mol(
+diff --git a/src/ms_pred/iceberg/predict_gen.py b/src/ms_pred/iceberg/predict_gen.py
+index b02d75e..afb1f0d 100644
+--- a/src/ms_pred/iceberg/predict_gen.py
++++ b/src/ms_pred/iceberg/predict_gen.py
+@@ -120,7 +120,7 @@ def predict():
+ 
+     # Load from checkpoint
+     gpu = kwargs["gpu"]
+-    model = gen_model.FragGNN.load_from_checkpoint(best_checkpoint, map_location='cpu')
++    model = gen_model.FragGNN.load_from_checkpoint(best_checkpoint, map_location='cpu', weights_only=False)
+     avail_gpu_num = torch.cuda.device_count()
+ 
+     logging.info(f"Loaded model with from {best_checkpoint}")
+diff --git a/src/ms_pred/iceberg/predict_inten.py b/src/ms_pred/iceberg/predict_inten.py
+index f060b26..a8aeeee 100644
+--- a/src/ms_pred/iceberg/predict_inten.py
++++ b/src/ms_pred/iceberg/predict_inten.py
+@@ -113,7 +113,7 @@ def predict():
+     if kwargs["debug"]:
+         df = df.head(10)
+     best_checkpoint = kwargs["checkpoint_pth"]
+-    model = inten_model.IntenGNN.load_from_checkpoint(best_checkpoint)
++    model = inten_model.IntenGNN.load_from_checkpoint(best_checkpoint, weights_only=False)
+     logging.info(f"Loaded model with from {best_checkpoint}")
+ 
+     pe_embed_k = model.pe_embed_k
+diff --git a/src/ms_pred/iceberg/predict_smis.py b/src/ms_pred/iceberg/predict_smis.py
+index 066b030..9231cbb 100644
+--- a/src/ms_pred/iceberg/predict_smis.py
++++ b/src/ms_pred/iceberg/predict_smis.py
+@@ -136,8 +136,8 @@ def predict():
+     inten_checkpoint = kwargs["inten_checkpoint"]
+ 
+     gpu = kwargs["gpu"]
+-    inten_model_obj = inten_model.IntenGNN.load_from_checkpoint(inten_checkpoint) #, map_location="cuda" if gpu else "cpu")
+-    gen_model_obj = gen_model.FragGNN.load_from_checkpoint(gen_checkpoint) #, map_location="cuda" if gpu else "cpu")
++    inten_model_obj = inten_model.IntenGNN.load_from_checkpoint(inten_checkpoint, weights_only=False) #, map_location="cuda" if gpu else "cpu")
++    gen_model_obj = gen_model.FragGNN.load_from_checkpoint(gen_checkpoint, weights_only=False) #, map_location="cuda" if gpu else "cpu")
+     avail_gpu_num = torch.cuda.device_count()
+     use_gpu = gpu and avail_gpu_num > 0
+ 
+diff --git a/src/ms_pred/iceberg/train_contr_inten.py b/src/ms_pred/iceberg/train_contr_inten.py
+index 4c34ee0..093ec3d 100644
+--- a/src/ms_pred/iceberg/train_contr_inten.py
++++ b/src/ms_pred/iceberg/train_contr_inten.py
+@@ -328,7 +328,7 @@ def train_model():
+ 
+     if kwargs["train_checkpoint"]:
+         train_checkpoint = kwargs["train_checkpoint"]
+-        model = inten_model.IntenGNN.load_from_checkpoint(train_checkpoint)
++        model = inten_model.IntenGNN.load_from_checkpoint(train_checkpoint, weights_only=False)
+         logging.info(
+             f"Loaded model with from {train_checkpoint}"
+         )
+@@ -354,7 +354,7 @@ def train_model():
+         test_checkpoint_score = "[unknown]"
+ 
+     # Load from checkpoint
+-    model = inten_model.IntenGNN.load_from_checkpoint(test_checkpoint)
++    model = inten_model.IntenGNN.load_from_checkpoint(test_checkpoint, weights_only=False)
+     # Force contrastive learning params
+     model.sk_tau = kwargs["sk_tau"]
+     model.contr_weight = kwargs["contr_weight"]
+diff --git a/src/ms_pred/iceberg/train_gen.py b/src/ms_pred/iceberg/train_gen.py
+index e21ae73..3011216 100644
+--- a/src/ms_pred/iceberg/train_gen.py
++++ b/src/ms_pred/iceberg/train_gen.py
+@@ -319,7 +319,7 @@ def train_model():
+         test_checkpoint_score = "[unknown]"
+ 
+     # Load from checkpoint
+-    model = gen_model.FragGNN.load_from_checkpoint(test_checkpoint)
++    model = gen_model.FragGNN.load_from_checkpoint(test_checkpoint, weights_only=False)
+     logging.info(
+         f"Loaded model with from {test_checkpoint} with val loss of {test_checkpoint_score}"
+     )
+diff --git a/src/ms_pred/iceberg/train_inten.py b/src/ms_pred/iceberg/train_inten.py
+index 9c6e1e1..108e544 100644
+--- a/src/ms_pred/iceberg/train_inten.py
++++ b/src/ms_pred/iceberg/train_inten.py
+@@ -327,7 +327,7 @@ def train_model():
+         test_checkpoint_score = "[unknown]"
+ 
+     # Load from checkpoint
+-    model = inten_model.IntenGNN.load_from_checkpoint(test_checkpoint)
++    model = inten_model.IntenGNN.load_from_checkpoint(test_checkpoint, weights_only=False)
+     logging.info(
+         f"Loaded model with from {test_checkpoint} with val loss of {test_checkpoint_score}"
+     )

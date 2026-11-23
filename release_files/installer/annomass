@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# AnnoMASS launcher.  `annomass` -> GUI;  `annomass headless --mgf in.mgf --out out.xlsx` -> command line
+export ANNOMASS_HOME="${ANNOMASS_HOME:-@ANNOMASS_HOME@}"
+APP="@APP_DIR@"
+PY="${ANNOMASS_HOME}/envs/main/bin/python"
+[[ -x "${PY}" ]] || { echo "AnnoMASS is not installed yet: run install.sh first." >&2; exit 1; }
+cd "${APP}" || exit 1
+
+mkdir -p "${APP}/reports/agent_reports" "${APP}/temp"
+export NUMBA_CACHE_DIR="${APP}/temp/numba_cache"
+export MPLCONFIGDIR="${APP}/temp/matplotlib"
+
+if [[ "${1:-}" == "headless" ]]; then shift; exec "${PY}" run_pipeline_headless.py "$@"; fi
+
+# --- GUI only: Chinese input (fcitx5) under WSLg/X11 and Qt plugin path ---------------
+export GTK_IM_MODULE="${GTK_IM_MODULE:-fcitx}"
+export QT_IM_MODULE="${QT_IM_MODULE:-fcitx}"
+export XMODIFIERS="${XMODIFIERS:-@im=fcitx}"
+export SDL_IM_MODULE="${SDL_IM_MODULE:-fcitx}"
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-xcb}"
+SYSTEM_QT_PLUGINS="/usr/lib/x86_64-linux-gnu/qt5/plugins"
+if [[ -d "${SYSTEM_QT_PLUGINS}" ]]; then
+  export QT_PLUGIN_PATH="${SYSTEM_QT_PLUGINS}:${QT_PLUGIN_PATH:-}"
+fi
+if command -v fcitx5 >/dev/null 2>&1; then
+  if pgrep -x fcitx5 >/dev/null 2>&1; then
+    fcitx5 -r -d --disable wayland >/tmp/annomass_fcitx5.log 2>&1 || true
+  else
+    fcitx5 -d --disable wayland >/tmp/annomass_fcitx5.log 2>&1 || true
+  fi
+fi
+exec "${PY}" launch_gui.py "$@"

@@ -9,6 +9,8 @@ description: Use AnnoMASS in the browser at https://annomass.com. Upload an MGF 
 The web version runs the AnnoMASS pipeline on our server. Nothing needs to be installed.
 The page is available in English and Chinese (switch at the top).
 
+![AnnoMASS web version, home page](assets/screenshots/web.png)
+
 | Good for | Use the local version instead when |
 |---|---|
 | A first try | You have more than 100 spectra |

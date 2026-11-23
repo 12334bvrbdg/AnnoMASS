@@ -7,8 +7,7 @@ description: Step-by-step tutorial for the AnnoMASS desktop GUI. Load spectra, c
 The GUI is the easiest way to look at results in detail: spectra, structures, predicted
 fragments and the evidence behind each candidate.
 
-!!! info "Screenshots"
-    Screenshots will be added in a later version of this page.
+![AnnoMASS desktop GUI: result table, spectrum comparison, structure and spectral-embedding map](assets/screenshots/gui.png)
 
 ## Start the GUI
 
