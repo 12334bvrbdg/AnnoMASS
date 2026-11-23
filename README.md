@@ -8,6 +8,7 @@
   <a href="https://annomass.com"><img src="https://img.shields.io/badge/Web%20app-annomass.com-1E88E5?style=flat-square" alt="Web app"></a>
   <a href="https://annomass.readthedocs.io/"><img src="https://img.shields.io/badge/Docs-readthedocs-8CA1AF?style=flat-square&logo=readthedocs&logoColor=white" alt="Docs"></a>
   <a href="https://github.com/12334bvrbdg/AnnoMASS/releases/latest"><img src="https://img.shields.io/github/v/release/12334bvrbdg/AnnoMASS?style=flat-square&label=Data%20release&color=FF4F8B" alt="Release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square" alt="License: AGPL-3.0"></a>
   <img src="https://img.shields.io/badge/Python-3.10-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10">
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20WSL2-555?style=flat-square&logo=linux&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Ion%20mode-positive-555?style=flat-square" alt="Positive ion mode">
@@ -156,6 +157,13 @@ them to run AnnoMASS.
 6. Wang, R. et al. Neural spectral prediction for structure elucidation with tandem mass spectrometry. *bioRxiv* 2025.05.28.656653 (2025). https://doi.org/10.1101/2025.05.28.656653
 7. Loeffler, H. H. et al. Reinvent 4: modern AI-driven generative molecule design. *Journal of Cheminformatics* **16**, 20 (2024). https://doi.org/10.1186/s13321-024-00812-5
 8. Schymanski, E. L. et al. Identifying small molecules via high resolution mass spectrometry: communicating confidence. *Environmental Science & Technology* **48**, 2097–2098 (2014). https://doi.org/10.1021/es5002105
+
+## License
+
+AnnoMASS is released under the [GNU Affero General Public License v3.0](LICENSE).
+Part of the code in `core/` is derived from [DeepMASS2](https://github.com/hcji/DeepMASS2_GUI)
+(AGPL-3.0). `cdk-2.2.jar` is the [Chemistry Development Kit](https://cdk.github.io) (LGPL-2.1).
+The DreaMS and ICEBERG weights in the Release keep the MIT licenses of their projects.
 
 ## Citation
 
