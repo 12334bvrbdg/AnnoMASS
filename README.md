@@ -17,6 +17,7 @@
   <a href="#use-annomass">Use</a> ·
   <a href="#downloads">Downloads</a> ·
   <a href="#3-screen-flavonoids-from-other-structure-databases">Flavonoid screening</a> ·
+  <a href="#repository-structure">Repository structure</a> ·
   <a href="https://annomass.readthedocs.io">Documentation</a> ·
   <a href="#references">References</a>
 </p>
@@ -155,6 +156,72 @@ them to run AnnoMASS.
 6. Wang, R. et al. Neural spectral prediction for structure elucidation with tandem mass spectrometry. *bioRxiv* 2025.05.28.656653 (2025). https://doi.org/10.1101/2025.05.28.656653
 7. Loeffler, H. H. et al. Reinvent 4: modern AI-driven generative molecule design. *Journal of Cheminformatics* **16**, 20 (2024). https://doi.org/10.1186/s13321-024-00812-5
 8. Schymanski, E. L. et al. Identifying small molecules via high resolution mass spectrometry: communicating confidence. *Environmental Science & Technology* **48**, 2097–2098 (2014). https://doi.org/10.1021/es5002105
+
+## License
+
+AnnoMASS is released under the [GNU Affero General Public License v3.0](LICENSE).
+Part of the code in `core/` is derived from [DeepMASS2](https://github.com/hcji/DeepMASS2_GUI)
+(AGPL-3.0). `cdk-2.2.jar` is the [Chemistry Development Kit](https://cdk.github.io) (LGPL-2.1).
+The DreaMS and ICEBERG weights in the Release keep the MIT licenses of their projects.
+
+## Citation
+
+The AnnoMASS paper is in preparation. Citation details will be added here.
+
+## Repository structure
+
+```text
+AnnoMASS/
+├── launch_gui.py               Start the desktop GUI (what the `annomass` command runs)
+├── annomass_app.py             GUI main window: loading spectra, running, result tables and plots
+├── run_pipeline_headless.py    Command line (`annomass headless --mgf ... --out ...`)
+├── cdk-2.2.jar                 Chemistry Development Kit, used for formula and isotope calculations
+│
+├── core/                       The AnnoMASS pipeline (see core/README.md)
+│   ├── annomass_algorithm.py   Main pipeline: levels A → B → C, then D
+│   ├── staged_levels.py        Scores and thresholds of each level
+│   ├── annotating/, importing/ Candidate retrieval and MGF/MSP reading
+│   └── ...                     Adapters to the spectral-embedding, fragment-prediction,
+│                               retention-time and substituent-check tools
+├── scripts/icefrag/            Helper run inside the fragment-prediction environment
+├── uic/, ui/assets/            GUI layout and logo
+│
+├── release_files/installer/    Installation
+│   ├── install.sh              One-step installer for Linux / WSL2
+│   ├── download_data.sh        Downloads weights and libraries from the Release page
+│   ├── Install_AnnoMASS.bat    Windows installer (runs install.sh inside WSL2)
+│   ├── Start_AnnoMASS.bat      Windows launcher (desktop icon)
+│   ├── envs/                   Python environment files
+│   ├── patches/                Small fixes applied to the third-party code
+│   └── WEIGHTS.md              List of model and data files and where they go
+│
+├── third_party/AnnoSM_py/      Python version of AnnoSM used for the substituent-position check
+├── flavonoid_screening/        Screen flavonoids from any structure database (see its README)
+├── examples/                   Five example spectra for a first test
+│
+├── docs_site/, mkdocs.yml      Documentation pages (https://annomass.readthedocs.io)
+└── LICENSE                     GNU AGPL-3.0
+```
+
+**Folders added after installation** (not in git; filled by `download_data.sh`):
+
+```text
+AnnoMASS/                       (this repository)
+├── data/                       Experimental flavonoid spectral library and its search index
+│   └── reference_libraries/    Reference spectral library with spectral embeddings
+├── model/                      Spectral-similarity model weights
+└── Stru/                       Flavonoid structure library (18,254 structures)
+
+~/AnnoMASS/                     (created by the installer; change with ANNOMASS_HOME)
+├── conda/                      Private Miniforge
+├── envs/                       Three Python environments: main, spectrum-retrieval, spectrum-prediction
+└── external/                   Third-party code at fixed versions, with their weights:
+    ├── DreaMS/                 spectral embedding (weights: ssl_model.ckpt, embedding_model.ckpt)
+    ├── ms-pred/                fragment prediction (weights: models/msg_all/)
+    ├── ABCoRT/                 retention-time prediction
+    ├── AnnoSM/                 substituent-position check (CFIL/TPIL libraries)
+    └── deepmet/                generated flavonoid structures (level D)
+```
 
 ## License
 
