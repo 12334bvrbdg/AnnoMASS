@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="docs_site/assets/logo.svg" alt="AnnoMASS logo" width="360">
+  <img src="docs_site/assets/social_preview.png" alt="AnnoMASS: tiered MS/MS annotation of flavonoids" width="100%">
 </p>
-
-<h3 align="center">Tiered MS/MS annotation of flavonoids</h3>
 
 <p align="center">
   <a href="https://annomass.com"><img src="https://img.shields.io/badge/Web%20app-annomass.com-1E88E5?style=flat-square" alt="Web app"></a>
